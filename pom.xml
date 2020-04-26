@@ -179,8 +179,24 @@
                         <goals>
                             <goal>report</goal>
                         </goals>
+                        <configuration>
+                            <includes>
+                                <include>org/example/commons/AbstractRepository*</include>
+                                <include>org/example/commons/repositories/*</include>
+                                <include>org/example/commons/services/*</include>
+                                <include>org/example/commons/controllers/*</include>
+                            </includes>
+                        </configuration>
                     </execution>
                 </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>14</source>
+                    <target>14</target>
+                </configuration>
             </plugin>
         </plugins>
     </build>
