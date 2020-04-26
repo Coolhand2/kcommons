@@ -1,6 +1,6 @@
 package org.example.commons.entities;
 
-public enum MembershipType {
+public enum MembershipRole {
     READ_ONLY,
     MEMBER,
     MODERATOR,

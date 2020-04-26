@@ -1,8 +1,6 @@
 package org.example.commons.entities;
 
 import java.io.Serializable;
-import javax.persistence.Embeddable;
-import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.Enumerated;
 import javax.persistence.Id;
@@ -42,7 +40,7 @@ public class Membership extends AbstractEntity<Membership> {
     
     @Builder.Default
     @Enumerated
-    private MembershipType type = MembershipType.READ_ONLY;
+    private MembershipRole type = MembershipRole.READ_ONLY;
 
     @Builder.Default
     @Transient
