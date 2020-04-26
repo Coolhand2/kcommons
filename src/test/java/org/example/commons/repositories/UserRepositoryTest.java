@@ -225,4 +225,25 @@ public class UserRepositoryTest {
         assertEquals(1, userList.size());
         assertTrue(userList.contains(u3));
     }
+
+    @Test
+    public void testFindByType() {
+        List<User> userList = users.findByType(UserType.ADMINISTRATOR);
+        assertEquals(1, userList.size());
+        assertTrue(userList.contains(u2));
+    }
+
+    @Test
+    public void testFindByStatus() {
+        List<User> userList = users.findByStatus(UserStatus.ACTIVE);
+        assertEquals(1, userList.size());
+        assertTrue(userList.contains(u2));
+    }
+
+    @Test
+    public void testFindByTypeAndStatus() {
+        List<User> userList = users.findByTypeAndStatus(UserType.ADMINISTRATOR, UserStatus.ACTIVE);
+        assertEquals(1, userList.size());
+        assertTrue(userList.contains(u2));
+    }
 }
