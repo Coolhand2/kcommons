@@ -105,6 +105,4 @@ abstract public class AbstractRepository<T, S> implements Repository<T, S> {
         entities.forEach(e -> getSession().delete(e));
         getSession().getTransaction().commit();
     }
-
-    public abstract List<T> filter(Filter<T> filter);
 }

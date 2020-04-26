@@ -1,22 +1,25 @@
 package org.example.commons.repositories;
 
-import java.util.ArrayList;
-import java.util.List;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
-
 import org.example.commons.AbstractRepository;
 import org.example.commons.api.Filter;
+import org.example.commons.api.Filterable;
 import org.example.commons.entities.Address_;
 import org.example.commons.entities.PhoneNumber_;
 import org.example.commons.entities.User;
+import org.example.commons.entities.UserStatus;
+import org.example.commons.entities.UserType;
 import org.example.commons.entities.User_;
 import org.example.commons.entities.filters.UserFilter;
 import org.example.commons.repositories.api.UserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
+import java.util.ArrayList;
+import java.util.List;
 
 public class UserRepositoryImpl extends AbstractRepository<User, Long> implements UserRepository {
 
@@ -83,6 +86,28 @@ public class UserRepositoryImpl extends AbstractRepository<User, Long> implement
                     predicates.toArray(new Predicate[0])
             ));
         }
+        return getSession().createQuery(query).getResultList();
+    }
+
+    @Override
+    public List<User> findByType(UserType type) {
+        return findByColumn(User_.type, type);
+    }
+
+    @Override
+    public List<User> findByStatus(UserStatus status) {
+        return findByColumn(User_.status, status);
+    }
+
+    @Override
+    public List<User> findByTypeAndStatus(UserType type, UserStatus status) {
+        CriteriaBuilder builder = getSession().getCriteriaBuilder();
+        CriteriaQuery<User> query = builder.createQuery(User.class);
+        Root<User> root = query.from(User.class);
+        query.where(builder.and(
+                builder.equal(root.get(User_.type), type),
+                builder.equal(root.get(User_.status), status)
+        ));
         return getSession().createQuery(query).getResultList();
     }
 }

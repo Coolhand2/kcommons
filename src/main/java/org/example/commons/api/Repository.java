@@ -10,7 +10,6 @@ public interface Repository<T, S> {
     List<T> findByIds(List<S> ids);
     <X> List<T> findByColumn(SingularAttribute<T, X> column, X... values);
     <X> List<T> findByColumn(SingularAttribute<T, X> column, List<X> values);
-    List<T> filter(Filter<T> filter);
     void create(T... entities);
     void create(List<T> entities);
     void update(T... entities);
