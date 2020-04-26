@@ -1,8 +1,6 @@
 package org.example.commons;
 
-import java.util.Arrays;
-import java.util.List;
-import javax.inject.Inject;
+import org.example.commons.api.Repository;
 import org.example.commons.entities.User;
 import org.example.commons.entities.User_;
 import org.example.commons.repositories.api.UserRepository;
@@ -15,6 +13,11 @@ import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+
+import javax.inject.Inject;
+import java.util.Arrays;
+import java.util.List;
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotEquals;
