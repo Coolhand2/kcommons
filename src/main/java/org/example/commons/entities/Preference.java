@@ -4,9 +4,11 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -17,36 +19,36 @@ import org.example.commons.AbstractEntity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@Builder
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
-@AllArgsConstructor(access = AccessLevel.PROTECTED)
+@Builder(toBuilder=true)
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name = "preferences")
 public class Preference extends AbstractEntity<Preference> {
 
     private static final Logger LOG = LoggerFactory.getLogger(Preference.class);
 
-    public static final Preference DEFAULT = new Preference();
+    public static final Preference DEFAULT = Preference.builder().build();
 
     @Id
     @GeneratedValue
-    @Getter
     @Builder.Default
     private Long id = 0L;
 
-    @Getter
-    @Setter
     @Builder.Default
     private String name = "";
 
+    @Builder.Default
+    private PreferenceType type = PreferenceType.STRING;
+
+    @Builder.Default
+    @Transient
+    private boolean editing = false;
+
     @Override
     public Preference clone() {
-        try {
-            return (Preference) super.clone();
-        } catch (CloneNotSupportedException e) {
-            LOG.error("Could not clone Preference object {}", this);
-            return new Preference();
-        }
+            return this.toBuilder().build();
     }
 
     @Override

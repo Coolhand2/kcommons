@@ -1,9 +1,11 @@
 package org.example.commons.entities;
 
 import javax.persistence.Embeddable;
+import javax.persistence.Transient;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -14,48 +16,42 @@ import org.example.commons.AbstractEntity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@Builder
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
-@AllArgsConstructor(access = AccessLevel.PROTECTED)
+@Builder(toBuilder=true)
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 @Embeddable
 public class Address extends AbstractEntity<Address> {
 
     private static final Logger LOG = LoggerFactory.getLogger(Address.class);
 
-    public static final Address DEFAULT = new Address();
+    public static final Address DEFAULT = Address.builder().build();
 
-    @Getter
-    @Setter
-    private String street1;
+    @Builder.Default
+    private String street1 = "";
 
-    @Getter
-    @Setter
-    private String street2;
+    @Builder.Default
+    private String street2 = "";
 
-    @Getter
-    @Setter
-    private String city;
+    @Builder.Default
+    private String city = "";
 
-    @Getter
-    @Setter
-    private String state;
+    @Builder.Default
+    private String state = "";
 
-    @Getter
-    @Setter
-    private String country;
+    @Builder.Default
+    private String country = "";
 
-    @Getter
-    @Setter
-    private String zipcode;
+    @Builder.Default
+    private String zipcode = "";
+
+    @Builder.Default
+    @Transient
+    private boolean editing = false;
 
     @Override
     public Address clone() {
-        try {
-            return (Address) super.clone();
-        } catch (CloneNotSupportedException e) {
-            LOG.error("Could not clone Address object {}", this);
-            return new Address();
-        }
+        return this.toBuilder().build();
     }
 
     @Override

@@ -70,8 +70,6 @@ abstract public class AbstractRepository<T, S> implements Repository<T, S> {
         return getSession().createQuery(query).getResultList();
     }
 
-    public abstract List<T> filter(Filter<T> filter);
-
     @Override
     public void create(T... entities) {
         create(Arrays.asList(entities));
@@ -108,17 +106,5 @@ abstract public class AbstractRepository<T, S> implements Repository<T, S> {
         getSession().getTransaction().commit();
     }
 
-    @Override
-    @Deprecated
-    public void save(T... entities) {
-        save(Arrays.asList(entities));
-    }
-
-    @Override
-    @Deprecated
-    public void save(List<T> entities) {
-        getSession().getTransaction().begin();
-        entities.forEach(e -> getSession().saveOrUpdate(e));
-        getSession().getTransaction().commit();
-    }
+    public abstract List<T> filter(Filter<T> filter);
 }

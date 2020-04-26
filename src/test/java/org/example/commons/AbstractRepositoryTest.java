@@ -1,20 +1,20 @@
 package org.example.commons;
 
-import org.example.commons.entities.Organization;
-import org.example.commons.repositories.api.OrganizationRepository;
+import java.util.Arrays;
+import java.util.List;
+import javax.inject.Inject;
+import org.example.commons.entities.User;
+import org.example.commons.entities.User_;
+import org.example.commons.repositories.api.UserRepository;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.asset.EmptyAsset;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-
-import javax.inject.Inject;
-import java.util.Arrays;
-import java.util.List;
-
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotEquals;
@@ -31,62 +31,71 @@ public class AbstractRepositoryTest {
     }
 
     @Inject
-    private OrganizationRepository organizations;
+    private UserRepository users;
+
+    private User u1, u2, u3;
+
+    @Before
+    public void setup() {
+        u1 = User.builder().username("ABC").build();
+        u2 = User.builder().username("DEF").build();
+        u3 = User.builder().username("GHI").build();
+        users.create(u1, u2, u3);
+    }
 
     @Test
     public void testFindAll() {
-        Organization o1 = Organization.builder().name("Name 1").build();
-        Organization o2 = Organization.builder().name("Name 2").build();
-        Organization o3 = Organization.builder().name("Name 3").build();
-
-        organizations.create(o1, o2);
-
-        List<Organization> list = organizations.findAll();
-        assertTrue(list.containsAll(Arrays.asList(o1, o2)));
-        assertFalse(list.contains(o3));
-
-        organizations.create(o3);
-
-        list = organizations.findAll();
-        assertTrue(list.contains(o3));
+        List<User> list = users.findAll();
+        assertEquals(3, list.size());
+        assertTrue(list.containsAll(Arrays.asList(u1, u2, u3)));
     }
 
     @Test
     public void testFindById() {
-        Organization o1 = Organization.builder().name("Name 1").build();
-        Organization o2 = Organization.builder().name("Name 2").build();
-
-        organizations.create(o1, o2);
-
-        Organization o3 = organizations.findById(o1.getId());
-        assertEquals(o1, o3);
+        User u4 = users.findById(u1.getId());
+        assertEquals(u1, u4);
     }
 
     @Test
     public void testFindByIds() {
-        Organization o1 = Organization.builder().name("Name 1").build();
-        Organization o2 = Organization.builder().name("Name 2").build();
-        Organization o3 = Organization.builder().name("Name 3").build();
-
-        organizations.create(o1, o2, o3);
-
-        List<Organization> list = organizations.findByIds(o1.getId(), o2.getId());
+        List<User> list = users.findByIds(u1.getId(), u2.getId());
 
         assertEquals(2, list.size());
-        assertTrue(list.contains(o1));
-        assertTrue(list.contains(o2));
-        assertFalse(list.contains(o3));
+        assertTrue(list.contains(u1));
+        assertTrue(list.contains(u2));
+    }
+
+    @Test
+    public void testFindByColumn() {
+        List<User> list = users.findByColumn(User_.username, "DEF");
+        assertEquals(1, list.size());
+        assertTrue(list.contains(u2));
+    }
+
+    @Test
+    public void testUpdate() {
+        u1.setUsername("ZYX");
+        users.update(u1);
+        User u3 = users.findById(u1.getId()).clone();
+        assertEquals(u1, u3);
+        assertNotEquals(u1, u2);
+    }
+
+
+    @Test
+    public void testDelete() {
+        users.delete(u2);
+        List<User> list = users.findAll();
+        assertEquals(2, list.size());
+        assertFalse(list.contains(u2));
     }
 
     @Test
     public void testFindKeepsReference() {
-        Organization o1 = Organization.builder().name("Name 1").build();
-        organizations.create(o1);
-
-        Organization o2 = organizations.findById(o1.getId());
-        assertEquals(o1, o2);
-        o1.setName("Something Completely Different");
-        assertEquals(o1, o2);
+        User u4 = users.findById(u1.getId());
+        assertEquals(u1, u4);
+        u1.setUsername("Something Completely Different");
+        assertEquals(u1, u4);
     }
 
     /**
@@ -96,28 +105,10 @@ public class AbstractRepositoryTest {
      */
     @Test
     public void testFindDoesNotKeepReferenceWithClone() {
-        Organization o1 = Organization.builder().name("Name 1").build();
-        organizations.create(o1);
-
-        Organization o2 = organizations.findById(o1.getId()).clone();
-        assertEquals(o1, o2);
-        o1.setName("Something Completely Different");
-        assertNotEquals(o1, o2);
-    }
-
-    @Test
-    public void testDelete() {
-        Organization o1 = Organization.builder().name("Name 1").build();
-        Organization o2 = Organization.builder().name("Name 2").build();
-        Organization o3 = Organization.builder().name("Name 3").build();
-
-        organizations.create(o1, o2, o3);
-        organizations.delete(o2);
-
-        List<Organization> list = organizations.findAll();
-        assertTrue(list.contains(o1));
-        assertFalse(list.contains(o2));
-        assertTrue(list.contains(o3));
+        User u4 = users.findById(u1.getId()).clone();
+        assertEquals(u1, u4);
+        u1.setUsername("Something Completely Different");
+        assertNotEquals(u1, u4);
     }
 
 }

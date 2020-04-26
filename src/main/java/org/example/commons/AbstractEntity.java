@@ -1,6 +1,6 @@
 package org.example.commons;
 
-abstract public class AbstractEntity<T> implements Comparable<T>, Cloneable {
+abstract public class AbstractEntity<T> implements Comparable<T> {
 
     /**
      * The lombok-generated equals method override either goes too far, or not far enough (can't figure out which) and
@@ -8,6 +8,8 @@ abstract public class AbstractEntity<T> implements Comparable<T>, Cloneable {
      */
 
 
+    abstract public T clone();
+    abstract public int compareTo(T that);
     abstract protected boolean isEqualTo(T that);
     abstract protected int getHashCode();
 

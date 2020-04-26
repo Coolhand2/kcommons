@@ -17,8 +17,4 @@ public interface Repository<T, S> {
     void update(List<T> entities);
     void delete(T... entities);
     void delete(List<T> entities);
-    @Deprecated
-    void save(T... entities);
-    @Deprecated
-    void save(List<T> entities);
 }

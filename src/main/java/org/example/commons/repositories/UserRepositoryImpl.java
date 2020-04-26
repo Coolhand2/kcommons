@@ -9,6 +9,7 @@ import javax.persistence.criteria.Root;
 
 import org.example.commons.AbstractRepository;
 import org.example.commons.api.Filter;
+import org.example.commons.entities.Address_;
 import org.example.commons.entities.PhoneNumber_;
 import org.example.commons.entities.User;
 import org.example.commons.entities.User_;
@@ -48,12 +49,31 @@ public class UserRepositoryImpl extends AbstractRepository<User, Long> implement
         if(!filter.getPkiDn().isEmpty()) {
             predicates.add(builder.like(builder.lower(root.get(User_.pkiDn)), '%' + filter.getPkiDn().toLowerCase() + '%'));
         }
+        if(!filter.getVerificationKey().isEmpty()) {
+            predicates.add(builder.like(builder.lower(root.get(User_.verificationKey)), '%' + filter.getVerificationKey().toLowerCase() + '%'));
+        }
         if(!filter.getPhoneNumber().isEmpty()) {
             predicates.add(builder.or(
                     builder.like(builder.lower(root.get(User_.phoneNumber).get(PhoneNumber_.areaCode)), '%' + filter.getPhoneNumber().toLowerCase() + '%'),
                     builder.like(builder.lower(root.get(User_.phoneNumber).get(PhoneNumber_.frontThree)), '%' + filter.getPhoneNumber().toLowerCase() + '%'),
                     builder.like(builder.lower(root.get(User_.phoneNumber).get(PhoneNumber_.backFour)), '%' + filter.getPhoneNumber().toLowerCase() + '%')
             ));
+        }
+        if(!filter.getAddress().isEmpty()) {
+            predicates.add(builder.or(
+                    builder.like(builder.lower(root.get(User_.address).get(Address_.city)), '%' + filter.getAddress().toLowerCase() + '%'),
+                    builder.like(builder.lower(root.get(User_.address).get(Address_.country)), '%' + filter.getAddress().toLowerCase() + '%'),
+                    builder.like(builder.lower(root.get(User_.address).get(Address_.state)), '%' + filter.getAddress().toLowerCase() + '%'),
+                    builder.like(builder.lower(root.get(User_.address).get(Address_.street1)), '%' + filter.getAddress().toLowerCase() + '%'),
+                    builder.like(builder.lower(root.get(User_.address).get(Address_.street2)), '%' + filter.getAddress().toLowerCase() + '%'),
+                    builder.like(builder.lower(root.get(User_.address).get(Address_.zipcode)), '%' + filter.getAddress().toLowerCase() + '%')
+            ));
+        }
+        if(!filter.getType().isEmpty()) {
+            filter.getType().forEach(t -> predicates.add(builder.equal(root.get(User_.type), t)));
+        }
+        if(!filter.getStatus().isEmpty()) {
+            filter.getStatus().forEach(s -> predicates.add(builder.equal(root.get(User_.status), s)));
         }
         query.select(root);
         if(predicates.size() == 1) {

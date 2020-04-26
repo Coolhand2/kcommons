@@ -1,9 +1,11 @@
 package org.example.commons.entities;
 
 import javax.persistence.Embeddable;
+import javax.persistence.Transient;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -14,39 +16,33 @@ import org.example.commons.AbstractEntity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@Builder
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
-@AllArgsConstructor(access = AccessLevel.PROTECTED)
+@Builder(toBuilder=true)
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 @Embeddable
 public class PhoneNumber extends AbstractEntity<PhoneNumber> {
 
     private static final Logger LOG = LoggerFactory.getLogger(PhoneNumber.class);
 
-    public static final PhoneNumber DEFAULT = new PhoneNumber();
+    public static final PhoneNumber DEFAULT = PhoneNumber.builder().build();
 
-    @Getter
-    @Setter
     @Builder.Default
     private String areaCode = "";
 
-    @Getter
-    @Setter
     @Builder.Default
     private String frontThree = "";
 
-    @Getter
-    @Setter
     @Builder.Default
     private String backFour = "";
 
+    @Builder.Default
+    @Transient
+    private boolean editing = false;
+
     @Override
     public PhoneNumber clone() {
-        try {
-            return (PhoneNumber) super.clone();
-        } catch (CloneNotSupportedException e) {
-            LOG.error("Could not clone PhoneNumber object {}", this);
-            return new PhoneNumber();
-        }
+        return this.toBuilder().build();
     }
 
     @Override

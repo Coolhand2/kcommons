@@ -1,54 +1,44 @@
 package org.example.commons.entities.filters;
 
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
+import java.util.ArrayList;
+import java.util.List;
 import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.Data;
 import org.example.commons.api.Filter;
 import org.example.commons.entities.User;
+import org.example.commons.entities.UserStatus;
+import org.example.commons.entities.UserType;
 
 @Builder
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
-@AllArgsConstructor(access = AccessLevel.PROTECTED)
+@Data
 public class UserFilter implements Filter<User> {
 
-    public static final UserFilter DEFAULT = new UserFilter();
+    public static final UserFilter DEFAULT = UserFilter.builder().build();
 
-    @Getter
-    @Setter
     @Builder.Default
     private String id = "";
 
-    @Getter
-    @Setter
     @Builder.Default
     private String username = "";
 
-    @Getter
-    @Setter
     @Builder.Default
     private String email = "";
 
-    @Getter
-    @Setter
     @Builder.Default
     private String pkiDn = "";
 
-    @Getter
-    @Setter
+    @Builder.Default
+    private String verificationKey = "";
+
     @Builder.Default
     private String phoneNumber = "";
 
-    @Getter
-    @Setter
     @Builder.Default
-    private String organization = "";
+    private String address = "";
 
-    @Getter
-    @Setter
     @Builder.Default
-    private String role = "";
+    private List<UserType> type = new ArrayList();
 
+    @Builder.Default
+    private List<UserStatus> status = new ArrayList();
 }

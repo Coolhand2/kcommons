@@ -1,7 +1,15 @@
 package org.example.commons.entities;
 
+import javax.persistence.Entity;
+import javax.persistence.Enumerated;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.Table;
+import javax.persistence.Transient;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.apache.commons.lang3.builder.CompareToBuilder;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
@@ -9,15 +17,12 @@ import org.example.commons.AbstractEntity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.persistence.Entity;
-import javax.persistence.Enumerated;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Transient;
-
 @Data
-@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder(toBuilder=true)
 @Entity
+@Table(name="users")
 public class User extends AbstractEntity<User> {
 
     public static final long serialVersionUID = 1L;
@@ -44,14 +49,14 @@ public class User extends AbstractEntity<User> {
     private String verificationKey = "";
 
     @Builder.Default
-    private PhoneNumber phoneNumber = PhoneNumber.DEFAULT;
+    private PhoneNumber phoneNumber = PhoneNumber.DEFAULT.clone();
 
     @Builder.Default
-    private Address address = Address.DEFAULT;
+    private Address address = Address.DEFAULT.clone();
 
     @Enumerated
     @Builder.Default
-    private UserType type = UserType.READ_ONLY;
+    private UserType type = UserType.MEMBER;
 
     @Enumerated
     @Builder.Default
@@ -63,12 +68,7 @@ public class User extends AbstractEntity<User> {
 
     @Override
     public User clone() {
-        try {
-            return (User) super.clone();
-        } catch (CloneNotSupportedException cnse) {
-            LOG.error("Could not clone user object {}!", this);
-            return User.builder().build();
-        }
+        return this.toBuilder().build();
     }
 
     @Override
