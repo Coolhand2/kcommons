@@ -3,15 +3,15 @@ package org.example.commons.repositories;
 import org.example.commons.AbstractRepository;
 import org.example.commons.entities.Preference;
 import org.example.commons.entities.PreferenceType;
+import org.example.commons.entities.UserPreference;
 import org.example.commons.entities.Preference_;
-import org.example.commons.entities.User;
-import org.example.commons.repositories.api.PreferenceRepository;
+import org.example.commons.repositories.api.PreferenceValueRepository;
 
 import java.util.List;
 
-public class PreferenceRepositoryImpl extends AbstractRepository<Preference, Long> implements PreferenceRepository {
-    protected PreferenceRepositoryImpl() {
-        super(Preference.class);
+public class PreferenceValueRepositoryImpl extends AbstractRepository<UserPreference, Long> implements PreferenceValueRepository {
+    protected PreferenceValueRepositoryImpl() {
+        super(UserPreference.class);
     }
 
     @Override

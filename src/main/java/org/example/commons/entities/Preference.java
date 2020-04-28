@@ -3,6 +3,7 @@ package org.example.commons.entities;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 import lombok.AccessLevel;
@@ -19,15 +20,14 @@ import org.example.commons.AbstractEntity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@Builder(toBuilder=true)
+import java.util.ArrayList;
+import java.util.List;
+
+@Builder(toBuilder = true)
 @Data
-@NoArgsConstructor
-@AllArgsConstructor
 @Entity
 @Table(name = "preferences")
 public class Preference extends AbstractEntity<Preference> {
-
-    private static final Logger LOG = LoggerFactory.getLogger(Preference.class);
 
     public static final Preference DEFAULT = Preference.builder().build();
 
@@ -43,19 +43,22 @@ public class Preference extends AbstractEntity<Preference> {
     private PreferenceType type = PreferenceType.STRING;
 
     @Builder.Default
-    @Transient
-    private boolean editing = false;
+    @OneToMany
+    private List<PreferenceOption> options = new ArrayList<>();
+
+    @Builder.Default
+    @OneToMany
+    private List<PreferenceDefault> defaults = new ArrayList<>();
 
     @Override
     public Preference clone() {
-            return this.toBuilder().build();
+        return this.toBuilder().build();
     }
 
     @Override
     public int compareTo(Preference that) {
         return CompareToBuilder.reflectionCompare(this, that);
     }
-
 
     @Override
     protected boolean isEqualTo(Preference that) {
