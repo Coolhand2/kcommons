@@ -1,6 +1,7 @@
 package org.example.commons.entities
 
 import java.io.Serializable
+import java.time.LocalDateTime
 import javax.persistence.*
 
 @Entity
@@ -15,12 +16,16 @@ data class Membership(
         @ManyToOne
         private val group: Group = Group(),
 
-        @ManyToOne
-        private val role: MembershipRole = MembershipRole(),
+        @OneToMany
+        private val permissions: List<MembershipPermission> = mutableListOf(),
 
         @Transient
         private val editing: Boolean = false
 ) : Serializable {
+
+    fun isGranted(permission: MembershipPermission): Boolean {
+        return permission in permissions
+    }
     companion object {
         const val serialVersionUID: Long = 1L
         val default: Membership = Membership()

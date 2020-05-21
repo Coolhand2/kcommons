@@ -3,6 +3,7 @@ package org.example.commons.entities
 import java.io.Serializable
 import javax.persistence.GeneratedValue
 import javax.persistence.Id
+import javax.persistence.ManyToOne
 
 data class Configuration(
         @Id
@@ -13,7 +14,10 @@ data class Configuration(
 
         var value: String = "",
 
-        var type: ConfigurationType = ConfigurationType.SITE_WIDE
+        var type: ConfigurationType = ConfigurationType(),
+
+        @ManyToOne
+        var permissionRequiredToEdit: UserPermission = UserPermission()
 ) : Serializable{
     companion object {
         const val serialVersionUID: Long = 1L

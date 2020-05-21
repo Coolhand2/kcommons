@@ -1,6 +1,7 @@
 package org.example.commons.entities
 
 import java.io.Serializable
+import java.time.LocalDateTime
 import javax.persistence.*
 
 @Entity
@@ -30,14 +31,36 @@ data class User(
         @Enumerated
         var status: UserStatus = UserStatus(),
 
-        var role: UserRole = UserRole(),
+        @OneToMany
+        var permissions: MutableList<UserPermission> = mutableListOf(),
 
-        //Lists the permission level needed to edit a user.
-        var editPermission: UserPermission = UserPermission(),
+        @ManyToOne
+        var permissionRequiredToEdit: UserPermission = UserPermission(),
 
         @Transient
         var editing: Boolean = false
 ) : Serializable {
+
+    fun isGranted(permission: UserPermission): Boolean {
+        return permission in permissions
+    }
+
+    fun addPermission(permission: UserPermission) {
+        permissions.add(permission)
+    }
+
+    fun addPermissions(permissionList: List<UserPermission>) {
+        permissions.addAll(permissionList)
+    }
+
+    fun removePermission(permission: UserPermission) {
+        TODO("Not yet implemented")
+    }
+
+    fun removePermissions(permissions: List<UserPermission>) {
+        TODO("Not yet implemented")
+    }
+
     companion object {
         const val serialVersionUID = 1L
         val default: User = User()

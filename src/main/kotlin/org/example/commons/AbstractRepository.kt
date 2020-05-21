@@ -57,7 +57,7 @@ abstract class AbstractRepository<T, S> protected constructor(private val cls: C
 
     override fun create(entities: Iterable<T>) {
         em.transaction.begin()
-        entities.forEach(Consumer { e: T -> em.persist(e) })
+        entities.forEach { e: T -> em.persist(e) }
         em.transaction.commit()
     }
 
@@ -67,7 +67,7 @@ abstract class AbstractRepository<T, S> protected constructor(private val cls: C
 
     override fun update(entities: Iterable<T>) {
         em.transaction.begin()
-        entities.forEach(Consumer { e: T -> em.merge(e) })
+        entities.forEach { e -> em.merge(e) }
         em.transaction.commit()
     }
 
@@ -77,7 +77,7 @@ abstract class AbstractRepository<T, S> protected constructor(private val cls: C
 
     override fun delete(entities: Iterable<T>) {
         em.transaction.begin()
-        entities.forEach(Consumer { e: T -> em.remove(e) })
+        entities.forEach { e -> em.remove(e) }
         em.transaction.commit()
     }
 

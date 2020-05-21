@@ -7,7 +7,7 @@ import org.example.commons.entities.UserRole
 import org.example.commons.entities.UserStatus
 import org.example.commons.entities.UserType
 
-interface UserRepository : Repository<User, Long>, Filterable<User> {
+interface UserRepository : Repository<User, Long> {
     fun findByType(type: UserType): List<User>
     fun findByStatus(status: UserStatus): List<User>
     fun findByRole(role: UserRole): List<User>
